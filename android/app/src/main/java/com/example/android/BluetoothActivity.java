@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -171,6 +172,13 @@ public class BluetoothActivity extends AppCompatActivity {
                     if (mmServerSocket != null) {
                         socket = mmServerSocket.accept();
                         socket.getOutputStream().write("text".getBytes());
+                        InputStream inputStream = socket.getInputStream();
+                        byte[] dataAry = new byte[1024];
+                        int size = inputStream.read(dataAry);
+                        String str = new String(dataAry, 0, size);
+                        if (str != null){
+                            Log.d(TAG, str);
+                        }
                     }
                 } catch (IOException e) {
                     break;
@@ -178,7 +186,8 @@ public class BluetoothActivity extends AppCompatActivity {
 
                 if (socket != null) {
                     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    vibrator.vibrate(500); //1초 동안 진동
+                    vibrator.vibrate(3000); //1초 동안 진동
+
                     // 넣으면 신호를 한번 밖에 받지 못하기 때문에 제거
 //                    try {
 //                        mmServerSocket.close();
